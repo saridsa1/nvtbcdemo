@@ -1,0 +1,32 @@
+doctype html
+html
+    head
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        meta(name='description', content='A live blockchain demo in a browser.')
+        link(rel='icon', href='/favicon.ico')
+
+        title Blockchain Demo
+
+        link(rel='stylesheet', href='/stylesheets/lib/bootstrap.min.css')
+        link(rel='stylesheet', href='/stylesheets/lib/bootstrap-theme.min.css')
+        link(rel='stylesheet', href='/stylesheets/lib/bootstrap-horizon.css')
+        link(rel='stylesheet', href='/stylesheets/blockchain.css')
+
+        script(src='/javascripts/lib/jquery.min.js')
+        script(src='/javascripts/lib/bootstrap.min.js')
+        script(src='/javascripts/lib/spin.min.js')
+        body
+        .container
+          .row
+            .col-sm-6.col-md-4.col-md-offset-4
+              h1.text-center.login-title Blockchain demo - Sign in
+              .account-wall
+                img.profile-img(src='/images/photo.jpg', alt='')
+                form.form-signin(method='post', action="/login")
+                  input.form-control(type='text', placeholder='5-2-1 ID', required='', autofocus='' name='fivetwoone')
+                  button.btn.btn-lg.btn-primary.btn-block(type='submit')
+                    | Sign in
+                  - each message in flash
+                    h4(style="color: red;") #{message}

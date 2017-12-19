@@ -1,0 +1,67 @@
+extends layout
+
+block content
+  .container-fluid
+    h1 #{__('Coinbase Transactions')}
+    - var peers = {1: loggedInUser}
+    - each peer, chain in peers
+      h3 #{__('Peer')} #{peer}
+      .row.row-horizon
+        - var blocks = []
+        - blocks.push({block: 1, chain: chain, nonce: 3539, coinbasevalue: '100.00', coinbaseto: 'Satya Suman', txs: [], previous: '0000000000000000000000000000000000000000000000000000000000000000'})
+        - blocks.push({block: 2, chain: chain, nonce: 28943, coinbasevalue: '100.00', coinbaseto: 'Satya Suman', txs: [{value: '10.00', from: 'Satya Suman', to: 'Praveen'},{value: '20.00', from: 'Satya Suman', to: 'Marco'},{value: '15.00', from: 'Satya Suman', to: 'Nasreen'},{value: '15.00', from: 'Satya Suman', to: 'Raj'}], previous: '00003daf904cb073bebdb94a901c7b2cbb82ab362a840b3ab466ac01b6f647f3'})
+        - blocks.push({block: 3, chain: chain, nonce: 58171, coinbasevalue: '100.00', coinbaseto: 'Satya Suman', txs: [{value: '10.00', from: 'Sudha', to: 'Rithesh'},{value: '5.00', from: 'Raj', to: 'Anil'},{value: '20.00', from: 'Nasreen', to: 'Sudha'}], previous: '00000e2b50d9fa0eaeed49975cac179466fbf92c78a090fe890d52705fb32ed6'})
+        - blocks.push({block: 4, chain: chain, nonce: 179652, coinbasevalue: '100.00', coinbaseto: 'Satya Suman', txs: [{value: '15.00', from: 'Rithesh', to: 'Chetan'},{value: '5.00', from: 'Nasreen', to: 'Swati'},{value: '8.00', from: 'Swati', to: 'Chetan'}], previous: '0000479d96305593ead44be0620bbadabb4cd645ac10a2d60848fd00db8cade1'})
+        - blocks.push({block: 5, chain: chain, nonce: 34546, coinbasevalue: '100.00', coinbaseto: 'Nasreen', txs: [{value: '2.00', from: 'Chetan', to: 'Rithesh'},{value: '6.00', from: 'Marco', to: 'Praveen'},{value: '4.00', from: 'Praveen', to: 'Liz'},{value: '9.95', from: 'Liz', to: 'Marco'}], previous: '0000e9c72bf4d62a73c203add625c7ac54a1a4636055738a75503e2de6e6f44c'})
+        each block in blocks
+          .col-xs-7
+            include includes/coinbaseblock.jade
+
+  script.
+    $(function() {
+      setup(1, 1);
+      setup(2, 1);
+      setup(3, 1);
+      setup(4, 1);
+      setup(5, 1);
+
+      setup(1, 2);
+      setup(2, 2);
+      setup(3, 2);
+      setup(4, 2);
+      setup(5, 2);
+
+      setup(1, 3);
+      setup(2, 3);
+      setup(3, 3);
+      setup(4, 3);
+      setup(5, 3);
+    });
+
+    function getText(block, chain) {
+      var s = $('#block'+block+'chain'+chain+'number').val() +
+              $('#block'+block+'chain'+chain+'nonce').val() +
+              $('#block'+block+'chain'+chain+'coinbasevalue').val() +
+              $('#block'+block+'chain'+chain+'coinbaseto').val();
+
+      for (var x=0; $('#block'+block+'chain'+chain+'tx'+x+'value').length > 0; x++) {
+        s = s + $('#block'+block+'chain'+chain+'tx'+x+'value').val() +
+                $('#block'+block+'chain'+chain+'tx'+x+'from').val() +
+                $('#block'+block+'chain'+chain+'tx'+x+'to').val();
+      }
+      s = s + $('#block'+block+'chain'+chain+'previous').val();
+      return s;
+    }
+
+    function setup(block, chain) {
+      updateHash(block, chain);
+      $('#block'+block+'chain'+chain+'mineButton').click(function(e) {
+          e.preventDefault();
+          var l = Ladda.create(this);
+          l.start();
+          setTimeout(function() {
+              mine(block, chain, true);
+              l.stop();
+            }, 250); // give UI time to update
+        });
+    }
